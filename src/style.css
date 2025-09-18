@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #00DA78;
+    --color-secondary: #FFFFFF;
+    --color-tertiary: #323232;
+    --color-background: #191919;
+
+}
+
+.dm-sans{
+  font-family: "Karla", sans-serif;
+}
+ 
+
+.button {
+  @apply flex justify-center items-center cursor-pointer
+  bg-primary text-background font-bold rounded-md
+  hover:bg-background transition duration-300 hover:border hover:border-secondary
+  hover:text-primary;
+}
+
+.login {
+  @apply h-screen flex flex-col justify-center gap-8 text-secondary lg:w-[50%] 
+  lg:h-[80%] lg:bg-background lg:px-20 lg:gap-4 lg:pb-5 lg:rounded-2xl;
+}
+
+.login__p {
+  @apply flex flex-col items-center;
+}
+
+.login__link {
+  @apply ml-1 text-primary
+  hover:underline transition duration-300;
+}
+
+.main__login {
+  @apply lg:flex lg:justify-center lg:items-center lg:h-screen lg:bg-black
+}
