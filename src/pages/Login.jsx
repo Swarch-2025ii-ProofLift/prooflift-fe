@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons"
 
 import { TitleLogin } from '../components/login/TitleLogin.jsx'
@@ -9,10 +9,13 @@ import logo from '/icono-white.png'
 
 function Login () {
 
+  const navigate = useNavigate()
+
   const handleLogin = async (data) => {
     try {
       console.log("Datos del login:", data)
       const result = await login(data.email, data.password)
+      navigate('/holi')
     } catch (error) {
       console.error("Error en el login:", error)
     }
