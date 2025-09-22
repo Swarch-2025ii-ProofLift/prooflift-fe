@@ -23,8 +23,8 @@ function Header() {
 
   return (
     <header
-      className="fixed bg-background-secondary h-[10%] w-full flex items-center 
-    justify-between p-4 border-b border-primary z-50 lg:px-7"
+      className="sticky top-0 bg-background-secondary h-[10%] w-full flex items-center 
+    justify-between p-4 border-b border-primary z-50"
     >
       <img src={logo} alt="Logo" className="w-[20%] h-[90%] lg:w-[5%]" />
 
