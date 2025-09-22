@@ -11,7 +11,11 @@ export async function login(email, password) {
     throw new Error('Error en la autenticación')
   }
 
-  return response.json()
+  const data = await response.json()
+
+  localStorage.setItem("token", data.token);
+
+  return data;
 }
 
 export async function signup(nombre, email, password) {

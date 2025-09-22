@@ -5,6 +5,7 @@
     --color-secondary: #FFFFFF;
     --color-tertiary: #323232;
     --color-background: #191919;
+    --color-background-secondary: #0f2319;
 
 }
 
@@ -36,4 +37,9 @@
 
 .main__login {
   @apply lg:flex lg:justify-center lg:items-center lg:h-screen lg:bg-black
+}
+
+
+.li__header {
+  @apply cursor-pointer hover:text-primary
 }
