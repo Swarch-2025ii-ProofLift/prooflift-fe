@@ -15,7 +15,7 @@ function Login () {
     try {
       console.log("Datos del login:", data)
       const result = await login(data.email, data.password)
-      navigate('/holi')
+      navigate('/exercises')
     } catch (error) {
       console.error("Error en el login:", error)
     }
