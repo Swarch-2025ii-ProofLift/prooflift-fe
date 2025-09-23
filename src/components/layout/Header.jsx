@@ -35,8 +35,8 @@ function Header() {
 
       {/* Menú lateral en móviles */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-primary 
-            transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-background-secondary shadow-lg  
+            transform transition-transform duration-300 text-white lg:hidden ${
               menuOpen ? "translate-x-0" : "-translate-x-full"
             }`}
       >

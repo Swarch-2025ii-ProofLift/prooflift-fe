@@ -43,3 +43,19 @@
 .li__header {
   @apply cursor-pointer hover:text-primary
 }
+
+.h1__title {
+  @apply text-xl font-bold text-secondary lg:text-2xl
+}
+
+.h2__InfoExercises {
+  @apply text-lg font-bold lg:text-xl;
+}
+
+.main__exercises {
+  @apply w-full h-full flex flex-col items-center gap-6 mt-6 mb-20 lg:items-start lg:pl-20
+}
+
+.main__divMusclerGroupsBar {
+  @apply w-full flex overflow-x-auto gap-4
+}

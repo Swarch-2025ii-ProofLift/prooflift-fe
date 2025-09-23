@@ -9,9 +9,8 @@ function Exercises() {
   return (
     <div>
       <Header />
-      <main className="w-full h-full flex flex-col items-center gap-6 mt-6 mb-20 
-      lg:items-start lg:pl-20">
-        <h1 className="text-xl font-bold text-secondary lg:text-2xl">Explorar Ejercicios</h1>
+      <main className="main__exercises">
+        <h1 className="h1__title">Explorar Ejercicios</h1>
         <SearchBar />
         <div className="w-[90%] flex gap-4 overflow-x-auto pb-4">
           <MuscularGroupButton groupName="Todos" />

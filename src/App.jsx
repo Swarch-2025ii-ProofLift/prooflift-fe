@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Login } from './pages/Login.jsx'
 import { SignUp } from './pages/SignUp.jsx'
 import { Exercises } from './pages/Exercises.jsx'
+import { InfoExercises } from './pages/InfoExercises.jsx'
 
 function App () {
   return (
@@ -12,6 +13,7 @@ function App () {
         <Route path='/' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/exercises' element={<Exercises />} />
+        <Route path='/infoExercises' element={<InfoExercises />} />
       </Routes>
     </Router>
   )
