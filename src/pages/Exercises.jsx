@@ -9,31 +9,16 @@ import { exercisesAPI } from "../API/exercises";
 function Exercises() {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // Agregar estado de error
   const [selectedGroup, setSelectedGroup] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [nextCursor, setNextCursor] = useState(null);
 
   const muscleGroups = ['Todos', 'Pecho', 'Espalda', 'Piernas', 'Hombros', 'Brazos', 'Core'];
 
-  // Debug: Verificar variables de entorno
-  useEffect(() => {
-    console.log('API URL:', import.meta.env.VITE_SUGGEST_API_URL);
-  }, []);
-
   // Función para cargar ejercicios
   const loadExercises = async (isNewSearch = false) => {
     setLoading(true);
-    setError(null);
-    
     try {
-      console.log('Loading exercises with:', {
-        group: selectedGroup !== 'Todos' ? selectedGroup : null,
-        q: searchQuery || null,
-        limit: 20,
-        cursor: isNewSearch ? null : nextCursor
-      });
-
       const data = await exercisesAPI.getExercises({
         group: selectedGroup !== 'Todos' ? selectedGroup : null,
         q: searchQuery || null,
@@ -41,18 +26,15 @@ function Exercises() {
         cursor: isNewSearch ? null : nextCursor
       });
       
-      console.log('Received data:', data);
-      
       if (isNewSearch) {
-        setExercises(data.items || []);
+        setExercises(data.items);
       } else {
-        setExercises(prev => [...prev, ...(data.items || [])]);
+        setExercises(prev => [...prev, ...data.items]);
       }
       
       setNextCursor(data.page?.next_cursor);
     } catch (error) {
       console.error('Error loading exercises:', error);
-      setError(error.message);
       setExercises([]);
     } finally {
       setLoading(false);
@@ -71,6 +53,11 @@ function Exercises() {
 
   const handleGroupSelect = (groupName) => {
     setSelectedGroup(groupName);
+    
+    // Si selecciona "Todos", también limpiar la búsqueda
+    if (groupName === 'Todos') {
+      setSearchQuery('');
+    }
   };
 
   const handleSearch = (query) => {
@@ -118,19 +105,7 @@ function Exercises() {
             </div>
           )}
           
-          {error && (
-            <div className="w-full text-center py-4">
-              <p className="text-red-400">Error: {error}</p>
-              <button 
-                onClick={() => loadExercises(true)}
-                className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Reintentar
-              </button>
-            </div>
-          )}
-          
-          {exercises.length === 0 && !loading && !error && (
+          {exercises.length === 0 && !loading && (
             <div className="w-full text-center py-8">
               <p className="text-gray-400">No se encontraron ejercicios</p>
             </div>
