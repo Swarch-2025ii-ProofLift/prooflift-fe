@@ -40,25 +40,25 @@ function ExerciseCard({id, title, bodyPart, img}) {
   return (
     <div 
       className="w-full h-25 p-4 bg-tertiary rounded-xl flex 
-      items-center justify-start gap-4 lg:w-[20%] lg:h-60 lg:flex-col lg:items-start
-      lg:justify-start lg:p-0 cursor-pointer hover:scale-105 transition-transform"
+      items-center justify-between gap-4 lg:w-[20%] lg:h-60 lg:flex-col lg:items-start
+      lg:justify-start lg:p-0 cursor-pointer hover:scale-105 transition-transform lg:relative"
       onClick={handleCardClick}
     >
         <img 
-          className="w-20 h-20 object-cover rounded-xl lg:w-full lg:h-30" 
+          className="w-20 h-20 object-cover rounded-xl lg:w-full lg:h-30 flex-shrink-0" 
           src={getImageUrl()}
           alt={`Imagen de ${title}`}
           onError={(e) => {
             e.target.src = getPlaceholderImage(bodyPart);
           }}
         />
-        <div className="w-45 lg:pl-5">
-                <h1 className="text-lg text-secondary">{title}</h1>
-                <p className="text-gray-200 capitalize">{bodyPart}</p>
+        <div className="flex-1 min-w-0 overflow-hidden lg:pl-5 lg:flex-none lg:w-full lg:pr-12">
+                <h1 className="text-lg text-secondary truncate lg:text-base">{title}</h1>
+                <p className="text-gray-200 capitalize text-sm truncate">{bodyPart}</p>
         </div>
         <FontAwesomeIcon 
           size='xl' 
-          className="text-background cursor-pointer hover:scale-110 lg:pl-4" 
+          className="text-background cursor-pointer hover:scale-110 flex-shrink-0 lg:absolute lg:bottom-4 lg:right-4 lg:pl-0" 
           icon={faSquarePlus}
           onClick={handleAddExercise}
         />
