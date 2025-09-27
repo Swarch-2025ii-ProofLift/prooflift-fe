@@ -114,7 +114,7 @@ function Exercises() {
         {nextCursor && !loading && (
           <button 
             onClick={handleLoadMore}
-            className="mt-6 px-6 py-2 bg-secondary text-white rounded-lg hover:bg-secondary/80 transition-colors"
+            className="mt-6 px-6 py-2 button"
           >
             Cargar más ejercicios
           </button>
