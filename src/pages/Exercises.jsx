@@ -54,7 +54,6 @@ function Exercises() {
   const handleGroupSelect = (groupName) => {
     setSelectedGroup(groupName);
     
-    // Si selecciona "Todos", también limpiar la búsqueda
     if (groupName === 'Todos') {
       setSearchQuery('');
     }

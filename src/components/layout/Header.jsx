@@ -1,10 +1,12 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import logo from "/icono-white.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const navigate = useNavigate()
 
   const toggleMenu = () => setMenuOpen(!menuOpen)
 
@@ -13,11 +15,15 @@ function Header() {
     window.location.href = "/"
   }
 
+  const handleNavigation = (path) => {
+    navigate(path)
+    setMenuOpen(false) // Cerrar menú móvil después de navegar
+  }
 
   const menuItems = [
-    { label: "Inicio"},
-    { label: "Ejercicios"},
-    { label: "Publicar" },
+    { label: "Inicio", action: () => handleNavigation("/") },
+    { label: "Ejercicios", action: () => handleNavigation("/exercises") },
+    { label: "Publicar", action: () => handleNavigation("/publicar") },
     { label: "Cerrar sesión", action: handleLogout },
   ]
 
@@ -26,7 +32,12 @@ function Header() {
       className="sticky top-0 bg-background-secondary h-[10%] w-full flex items-center 
     justify-between p-4 border-b border-primary z-50"
     >
-      <img src={logo} alt="Logo" className="w-[20%] h-[90%] lg:w-[5%]" />
+      <img 
+        src={logo} 
+        alt="Logo" 
+        className="w-[20%] h-[90%] lg:w-[5%] cursor-pointer" 
+        onClick={() => handleNavigation("/")}
+      />
 
       {/* Botón menú solo en móviles */}
       <button className="text-2xl lg:hidden" onClick={toggleMenu}>
@@ -43,7 +54,7 @@ function Header() {
         <div className="p-4 font-extrabold text-lg">Menú</div>
         <ul className="flex flex-col p-2 gap-5 font-bold">
           {menuItems.map((item, index) => (
-            <li key={index} onClick={item.action} className="cursor-pointer">
+            <li key={index} onClick={item.action} className="cursor-pointer hover:text-secondary">
               {item.label}
             </li>
           ))}
@@ -56,13 +67,13 @@ function Header() {
           <li
             key={index}
             onClick={item.action}
-            className="li__header cursor-pointer"
+            className="li__header cursor-pointer hover:text-secondary"
           >
             {item.label}
           </li>
         ))}
       </ul>
-      <p className='hidden lg:block text-white li__header' 
+      <p className='hidden lg:block text-white li__header cursor-pointer hover:text-secondary' 
       onClick={handleLogout}>Cerrar Sesión</p>
     </header>
   )
