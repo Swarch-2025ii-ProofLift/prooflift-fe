@@ -31,6 +31,22 @@ function InfoExercises() {
     }
   }, [id]);
 
+  // Crear slug del nombre del ejercicio (igual que en ExerciseCard)
+  const createSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/[áàäâ]/g, 'a')
+      .replace(/[éèëê]/g, 'e')
+      .replace(/[íìïî]/g, 'i')
+      .replace(/[óòöô]/g, 'o')
+      .replace(/[úùüû]/g, 'u')
+      .replace(/[ñ]/g, 'n')
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  };
+
   // Mapeo de imágenes por grupo muscular (mismo que en ExerciseCard)
   const getPlaceholderImage = (group) => {
     const placeholders = {
@@ -45,12 +61,20 @@ function InfoExercises() {
   };
 
   const getImageUrl = () => {
-    if (exercise?.media?.url) {
-      return exercise.media.url.startsWith('/') 
-        ? `${import.meta.env.VITE_SUGGEST_API_URL || 'http://localhost:8082'}${exercise.media.url}`
-        : exercise.media.url;
+    // 1. Intentar usar imagen específica del ejercicio (igual que en ExerciseCard)
+    if (exercise?.name) {
+      const slug = createSlug(exercise.name);
+      const exerciseImagePath = `/exercises/${slug}.webp`;
+      return exerciseImagePath;
     }
+    
+    // 2. Si no hay nombre del ejercicio, usar placeholder
     return getPlaceholderImage(exercise?.group);
+  };
+
+  const handleImageError = (e) => {
+    // Si falla la imagen específica, usar placeholder del grupo muscular
+    e.target.src = getPlaceholderImage(exercise?.group);
   };
 
   if (loading) {
@@ -106,9 +130,7 @@ function InfoExercises() {
           className="rounded-xl w-full max-w-2xl" 
           src={getImageUrl()} 
           alt={`Imagen de ${exercise.name}`}
-          onError={(e) => {
-            e.target.src = getPlaceholderImage(exercise.group);
-          }}
+          onError={handleImageError}
         />
 
         {exercise.cues && exercise.cues.length > 0 && (
