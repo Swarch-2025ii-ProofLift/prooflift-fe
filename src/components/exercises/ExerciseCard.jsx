@@ -37,11 +37,11 @@ function ExerciseCard({id, title, bodyPart}) {
   // Determinar la imagen a mostrar
   const getImageUrl = () => {
     const slug = createSlug(title);
-    console.log(`Buscando imagen para: "${title}" -> slug: "${slug}"`); // Debug
+    // console.log(`Buscando imagen para: "${title}" -> slug: "${slug}"`); // Debug
     
     // Ruta de la imagen específica
     const exerciseImagePath = `/exercises/${slug}.webp`;
-    console.log(`Ruta de imagen: ${exerciseImagePath}`); // Debug
+    // console.log(`Ruta de imagen: ${exerciseImagePath}`); // Debug
     
     return exerciseImagePath;
   };
@@ -75,9 +75,11 @@ function ExerciseCard({id, title, bodyPart}) {
           onError={handleImageError}
           onLoad={() => console.log(`Imagen cargada: ${title}`)} // Debug
         />
-        <div className="flex-1 min-w-0 overflow-hidden lg:pl-5 lg:flex-none lg:w-full lg:pr-12">
-                <h1 className="text-lg text-secondary truncate lg:text-base">{title}</h1>
-                <p className="text-gray-200 capitalize text-sm truncate">{bodyPart}</p>
+        <div className="overflow-hidden lg:pl-5 lg:flex-none lg:w-full lg:pr-12">
+          <h1 className="text-lg text-secondary truncate lg:text-base">
+            {title}
+          </h1>
+          <p className="text-gray-200 capitalize text-sm truncate">{bodyPart}</p>
         </div>
         <FontAwesomeIcon 
           size='xl' 

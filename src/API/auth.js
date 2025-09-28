@@ -18,7 +18,7 @@ export async function login(email, password) {
   const data = await response.json()
 
   localStorage.setItem("token", data.token);
-  console.log("holi")
+  // console.log("Token guardado en localStorage:", data.token);
 
   return data;
 }
@@ -34,6 +34,5 @@ export async function signup(nombre, email, password) {
     throw new Error('Error en el registro')
   }
 
-  console.log("holi")
   return response.json()
 }

@@ -86,8 +86,7 @@ function InfoExercises() {
   };
 
   const handleAddToRoutine = () => {
-    // Aquí irá la lógica para agregar el ejercicio a la rutina
-    console.log('Agregando ejercicio a rutina:', exercise.name);
+    // console.log('Agregando ejercicio a rutina:', exercise.name);
   };
 
   if (loading) {
