@@ -126,145 +126,124 @@ function InfoExercises() {
   }
 
   return (
-    <div className="bg-background-secondary min-h-screen">
+    <div className="bg-background-secondary text-secondary">
       <Header />
-      <main className="w-full flex justify-center py-8 px-4">
-        <div className="max-w-5xl w-full">
-          
-          <button 
-            onClick={() => navigate('/exercises')}
-            className="text-secondary hover:text-primary mb-8 flex items-center gap-2 transition-colors"
-          >
-            <span className="text-lg">←</span>
-            Volver a ejercicios
-          </button>
+      <main className="w-full flex flex-col gap-5 px-4 py-10 lg:px-60">
+        <button 
+          onClick={() => navigate('/exercises')}
+          className="cursor-pointer flex items-center 
+            gap-2 transition-colors hover:text-primary">
+          <span className="text-lg">←</span>
+          Volver a ejercicios
+        </button>
+    
+        <h1 className="text-3xl font-bold leading-tight lg:text-4xl">
+          {exercise.name}
+        </h1>
+        
+        <p className="text-gray-300 font-light leading-relaxed">
+          {exercise.description || `${exercise.name} es un ejercicio fundamental para el desarrollo de ${exercise.group}, diseñado para mejorar tanto la fuerza como la técnica de ejecución.`}
+        </p>
 
-          <div className="text-center mb-12">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              {exercise.name}
-            </h1>
+        <img 
+          className="w-full h-auto object-fit rounded-2xl lg:h-120" 
+          src={getImageUrl()} 
+          alt={`Demostración de ${exercise.name}`}
+          onError={handleImageError}
+        />
             
-            <div className="max-w-3xl mx-auto">
-              <p className="text-gray-300 text-lg lg:text-xl font-light leading-relaxed">
-                {exercise.description || `${exercise.name} es un ejercicio fundamental para el desarrollo de ${exercise.group}, diseñado para mejorar tanto la fuerza como la técnica de ejecución.`}
-              </p>
+        {exercise.cues && exercise.cues.length > 0 && (
+          <section className="section__InfoExercises">
+            <h2 className="h2__InfoExercises">
+              Técnica de Ejecución
+            </h2>
+            <div className="bg-background border border-primary/20 rounded-xl p-6 shadow-lg">
+              <ol className="space-y-4 text-gray-200">
+                {exercise.cues.map((cue, index) => (
+                  <li key={index} className="flex items-start gap-4">
+                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-background text-sm rounded-full flex items-center justify-center font-bold">
+                      {index + 1}
+                    </span>
+                    <span className="text-secondary pt-1">{cue}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
-          </div>
+          </section>
+        )}
 
-          <div className="flex justify-center mb-16">
-            <div className="relative rounded-xl overflow-hidden shadow-xl max-w-3xl w-full">
-              <img 
-                className="w-full h-auto object-cover" 
-                src={getImageUrl()} 
-                alt={`Demostración de ${exercise.name}`}
-                onError={handleImageError}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+        <section className="section__InfoExercises">
+          <h2 className="h2__InfoExercises">
+            Información del Ejercicio
+          </h2>
+            <div className="section__InfoExercises">
+              <h3 className="h3__InfoExercises">
+                Músculos Trabajados:
+              </h3>
+              <div className="section__div__InfoExercises">
+                {exercise.muscles.map((muscle, index) => (
+                  <MuscleGroupCard key={index} muscleGroup={muscle} />
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            
-            {exercise.cues && exercise.cues.length > 0 && (
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Técnica de Ejecución
-                </h2>
-                <div className="bg-background border border-primary/20 rounded-xl p-6 shadow-lg">
-                  <ol className="space-y-4 text-gray-200">
-                    {exercise.cues.map((cue, index) => (
-                      <li key={index} className="flex items-start gap-4">
-                        <span className="flex-shrink-0 w-8 h-8 bg-primary text-background text-sm rounded-full flex items-center justify-center font-bold">
-                          {index + 1}
-                        </span>
-                        <span className="leading-relaxed text-secondary pt-1">{cue}</span>
-                      </li>
-                    ))}
-                  </ol>
+            {exercise.goal_tags && exercise.goal_tags.length > 0 && (
+              <div className="section__InfoExercises">
+                <h3 className="h3__InfoExercises">
+                  Objetivos:
+                </h3>
+                <div className="section__div__InfoExercises">
+                  {exercise.goal_tags.map((goal, index) => (
+                    <MuscleGroupCard key={index} muscleGroup={goal} />
+                  ))}
                 </div>
-              </section>
+              </div>
             )}
 
-            <section>
-              <h2 className="text-2xl font-bold text-white mb-6">
-                Información del Ejercicio
-              </h2>
-              
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                    Músculos Trabajados
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {exercise.muscles.map((muscle, index) => (
-                      <MuscleGroupCard key={index} muscleGroup={muscle} />
-                    ))}
-                  </div>
+            {exercise.equipment && exercise.equipment.length > 0 && (
+              <div className="section__InfoExercises">
+                <h3 className="h3__InfoExercises">
+                  Equipamiento Necesario:
+                </h3>
+                <div className="section__div__InfoExercises">
+                  {exercise.equipment.map((item, index) => (
+                    <MuscleGroupCard key={index} muscleGroup={item} />
+                  ))}
                 </div>
-
-                {exercise.goal_tags && exercise.goal_tags.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                      Objetivos
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {exercise.goal_tags.map((goal, index) => (
-                        <MuscleGroupCard key={index} muscleGroup={goal} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {exercise.equipment && exercise.equipment.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                      Equipamiento Necesario
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {exercise.equipment.map((item, index) => (
-                        <MuscleGroupCard key={index} muscleGroup={item} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {exercise.level && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                      Nivel de Dificultad
-                    </h3>
-                    <div className="flex items-center gap-3">
-                      <MuscleGroupCard muscleGroup={exercise.level} />
-                      <span className={`text-xs px-3 py-1 rounded-full text-white ${getLevelBadge(exercise.level).color}`}>
-                        {getLevelBadge(exercise.level).text}
-                      </span>
-                    </div>
-                  </div>
-                )}
               </div>
-            </section>
-
-          </div>
-
-          <div className="bg-tertiary border border-primary/10 rounded-xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">
+            )}
+            {exercise.level && (
+              <div className="section__InfoExercises">
+                <h3 className="h3__InfoExercises">
+                  Nivel de Dificultad:
+                </h3>
+                <div className="section__div__InfoExercises">
+                  <MuscleGroupCard muscleGroup={exercise.level} />
+                  <span className={`px-3 py-2 rounded-xl text-white ${getLevelBadge(exercise.level).color}`}>
+                    {getLevelBadge(exercise.level).text}
+                  </span>
+                </div>
+              </div>
+            )}
+      
+        </section>
+          <div className="flex flex-col justify-center items-center text-center gap-3 bg-tertiary border border-primary/10 rounded-xl p-8 mt-5">
+            <h3 className="text-xl font-bold text-white mb-4">
               ¿Te gusta este ejercicio?
             </h3>
-            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl lg:text-sm">
               Añádelo a tu rutina personalizada y mantén un seguimiento de tu progreso. 
               Desarrolla fuerza y técnica de manera consistente.
             </p>
             <div className="flex justify-center">
               <button 
                 onClick={handleAddToRoutine}
-                className="w-60 h-12 text-lg button"
+                className="w-50 h-10 text-lg button lg:w-45 lg:text-lg"
               >
                 Agregar a Rutina
               </button>
             </div>
           </div>
-
-        </div>
       </main>
       <Footer />
     </div>
