@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+import { exercisesAPI } from "../../../API/exercises.js";
+import ExerciseSelector from "../create/ExerciseSelector";
+
 function PostBody({
   post,
   isEditing,
@@ -6,11 +10,79 @@ function PostBody({
   editTextareaRef,
   onEditBodyChange,
   onSaveEdit,
-  onCancelEdit
+  onCancelEdit,
+  editSelectedExercises = [],
+  onEditExercisesChange
 }) {
+  const [exerciseNames, setExerciseNames] = useState({});
+  const [loadingNames, setLoadingNames] = useState(false);
+
+  useEffect(() => {    
+    const fetchExerciseNames = async () => {
+      if (isEditing && post.exerciseIds && post.exerciseIds.length > 0) {
+          setLoadingNames(true);
+          try {
+            const namesMap = {};
+            for (const exerciseId of post.exerciseIds) {
+              try {
+                const data = await exercisesAPI.getExercises({
+                  q: '',
+                  limit: 20
+                });
+                
+                const exercise = data.items.find(ex => ex.id === exerciseId);
+                if (exercise) {
+                  namesMap[exerciseId] = exercise.name;
+                }
+              } catch (err) {
+                console.error(`Error fetching exercise ${exerciseId}:`, err);
+              }
+            }
+            
+            setExerciseNames(namesMap);
+          } catch (error) {
+            console.error('Error fetching exercise names:', error);
+          } finally {
+            setLoadingNames(false);
+          }
+      }
+    };
+    
+    fetchExerciseNames();
+  }, [isEditing, post]);
+
+  const handleToggleExercise = (exerciseId, exerciseName) => {    
+    setExerciseNames(prev => {
+      const updated = {
+        ...prev,
+        [exerciseId]: exerciseName
+      };
+      return updated;
+    });
+
+    if (editSelectedExercises.includes(exerciseId)) {
+      onEditExercisesChange(editSelectedExercises.filter(id => id !== exerciseId));
+    } else {
+      onEditExercisesChange([...editSelectedExercises, exerciseId]);
+    }
+  };
+
+  const getExerciseName = (exerciseId) => {
+    if (exerciseNames[exerciseId]) {
+      return exerciseNames[exerciseId];
+    }
+
+    return 'Exercise';
+  };
+
+  const handleRemoveExercise = (exerciseId) => {
+    onEditExercisesChange(editSelectedExercises.filter(id => id !== exerciseId));
+  };
+
   if (isEditing) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {/* Text Content */}
         <textarea
           ref={editTextareaRef}
           value={editBody}
@@ -21,7 +93,46 @@ function PostBody({
                      focus:ring-primary/50 resize-none min-h-[120px]"
           placeholder="Escribe tu publicación..."
         />
-        <div className="flex gap-3">
+
+        {/* Selected Exercises Display */}
+        {editSelectedExercises.length > 0 && (
+          <div className="space-y-2">
+            <label className="text-gray-400 text-sm font-medium">
+              Ejercicios seleccionados ({editSelectedExercises.length}):
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {editSelectedExercises.map((exerciseId) => (
+                <div
+                  key={exerciseId}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg 
+                             bg-primary/20 border border-primary/30 text-primary text-sm"
+                >
+                  <span>{getExerciseName(exerciseId)}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveExercise(exerciseId)}
+                    className="hover:bg-primary/30 rounded p-0.5 transition-colors"
+                    aria-label="Eliminar ejercicio"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Exercise Selector */}
+        <ExerciseSelector
+          selectedExercises={editSelectedExercises}
+          onToggleExercise={handleToggleExercise}
+          getExerciseName={getExerciseName}
+        />
+
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-2">
           <button
             onClick={onCancelEdit}
             disabled={updateLoading}

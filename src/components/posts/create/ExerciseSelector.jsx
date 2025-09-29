@@ -97,7 +97,7 @@ function ExerciseSelector({ selectedExercises, onToggleExercise, getExerciseName
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto 
-                     scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                     scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent pb-6">
           {exercises.map((exercise) => (
             <ExerciseButton
               key={exercise.id}

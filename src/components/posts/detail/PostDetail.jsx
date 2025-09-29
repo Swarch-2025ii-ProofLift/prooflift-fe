@@ -20,6 +20,7 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editBody, setEditBody] = useState("");
+  const [editSelectedExercises, setEditSelectedExercises] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -38,6 +39,7 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
     onCompleted: () => {
       setIsEditing(false);
       setEditBody("");
+      setEditSelectedExercises([]);
     },
     onError: (error) => console.error('Error updating post:', error)
   });
@@ -124,25 +126,31 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
   }, [onClose]);
 
   const handleEditPost = useCallback(() => {
-    if (post?.body) {
-      setEditBody(post.body);
+    if (post) {
+      setEditBody(post.body || "");
+      setEditSelectedExercises(post.exerciseIds || []);
       setIsEditing(true);
       setMenuOpen(false);
     }
-  }, [post?.body]);
+  }, [post]);
 
   const handleSaveEdit = useCallback(async () => {
     if (!editBody.trim()) return;
     
     await updatePost({
-      variables: { postId, body: editBody.trim() },
+      variables: { 
+        postId, 
+        body: editBody.trim(),
+        exerciseIds: editSelectedExercises
+      },
       refetchQueries: [{ query: GET_POST_DETAIL, variables: { postId } }],
     });
-  }, [editBody, postId, updatePost]);
+  }, [editBody, editSelectedExercises, postId, updatePost]);
 
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
     setEditBody("");
+    setEditSelectedExercises([]);
   }, []);
 
   const handleDeletePost = useCallback(async () => {
@@ -172,11 +180,11 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
   if (!postId) return null;
 
   return (
-    <div className={`fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4
+    <div className={`fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4
                      ${isClosing ? 'animate-out fade-out zoom-out-95 duration-200' : 'animate-in fade-in zoom-in-95 duration-200'}`}>
       <div 
         ref={modalRef}
-        className="bg-tertiary/80 rounded-xl shadow-2xl border border-gray-700/50 
+        className="bg-tertiary/50 rounded-xl shadow-2xl border border-gray-700/50 
                    max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
       >
         <PostDetailHeader onClose={handleClose} />
@@ -197,11 +205,13 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
                 currentUserId={currentUserId}
                 isEditing={isEditing}
                 editBody={editBody}
+                editSelectedExercises={editSelectedExercises}
                 updateLoading={updateLoading}
                 menuOpen={menuOpen}
                 menuRef={menuRef}
                 editTextareaRef={editTextareaRef}
                 onEditBodyChange={setEditBody}
+                onEditExercisesChange={setEditSelectedExercises}
                 onToggleMenu={() => setMenuOpen(!menuOpen)}
                 onEditPost={handleEditPost}
                 onSaveEdit={handleSaveEdit}

@@ -8,11 +8,13 @@ function PostDetailContent({
   currentUserId,
   isEditing,
   editBody,
+  editSelectedExercises,
   updateLoading,
   menuOpen,
   menuRef,
   editTextareaRef,
   onEditBodyChange,
+  onEditExercisesChange,
   onToggleMenu,
   onEditPost,
   onSaveEdit,
@@ -44,14 +46,16 @@ function PostDetailContent({
           post={post}
           isEditing={isEditing}
           editBody={editBody}
+          editSelectedExercises={editSelectedExercises}
           updateLoading={updateLoading}
           editTextareaRef={editTextareaRef}
           onEditBodyChange={onEditBodyChange}
+          onEditExercisesChange={onEditExercisesChange}
           onSaveEdit={onSaveEdit}
           onCancelEdit={onCancelEdit}
         />
 
-        {post.exerciseIds && post.exerciseIds.length > 0 && (
+        {!isEditing && post.exerciseIds && post.exerciseIds.length > 0 && (
           <PostExercises 
             exerciseIds={post.exerciseIds} 
             onExerciseClick={onExerciseClick}
