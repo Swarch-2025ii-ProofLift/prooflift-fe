@@ -1,4 +1,6 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUserName } from "../../../API/auth.js";
 
 import CommentMenu from "./CommentMenu";
 import CommentEditForm from "./CommentEditForm";
@@ -20,7 +22,29 @@ function CommentItem({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userName, setUserName] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        setLoadingUser(true);
+        const name = await getUserName(comment.userId);
+        setUserName(name);
+      } catch (error) {
+        console.error(`Error fetching username for ${comment.userId}:`, error);
+        setUserName(comment.userId);
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+
+    if (comment.userId) {
+      fetchUserName();
+    }
+  }, [comment.userId]);
 
   const shouldTruncate = comment.body.length > TRUNCATE_LENGTH;
   const displayBody = shouldTruncate && !isExpanded 
@@ -30,6 +54,10 @@ function CommentItem({
   const toggleExpansion = useCallback(() => {
     setIsExpanded(prev => !prev);
   }, []);
+
+  const handleUserClick = useCallback((userId) => {
+    console.log('Navigate to user:', userId);
+  }, [navigate]);
 
   return (
     <div
@@ -41,9 +69,18 @@ function CommentItem({
         <div className="flex-1 min-w-0">
           {/* Header */}
           <div className="flex items-center gap-2 mb-2">
-            <button className="font-semibold text-primary hover:text-primary/80 transition-colors
+            <button 
+              onClick={() => handleUserClick(comment.userId)}
+              className="font-semibold text-primary hover:text-primary/80 transition-colors
                              text-sm bg-primary/10 px-2 py-1 rounded-full">
-              @{comment.userId}
+              {loadingUser ? (
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+                  <span className="opacity-50">@...</span>
+                </span>
+              ) : (
+                `@${userName || comment.userId}`
+              )}
             </button>
             <time 
               className="text-xs text-gray-400"

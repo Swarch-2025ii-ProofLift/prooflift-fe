@@ -1,6 +1,7 @@
 import { REACTIONS } from "../../constants/reactions.js";
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { exercisesAPI } from "../../API/exercises.js";
+import { getUserName } from "../../API/auth.js";
 
 function PostCard({
   body,
@@ -18,6 +19,8 @@ function PostCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const [exercises, setExercises] = useState({});
   const [loadingExercises, setLoadingExercises] = useState(true);
+  const [userName, setUserName] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
   
   const shouldTruncate = body.length > 200;
   const displayBody = useMemo(() => 
@@ -58,6 +61,25 @@ function PostCard({
     fetchExerciseNames();
   }, [exerciseIds]);
 
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        setLoadingUser(true);
+        const name = await getUserName(userId);
+        setUserName(name);
+      } catch (error) {
+        console.error(`Error fetching username for ${userId}:`, error);
+        setUserName(userId);
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+
+    if (userId) {
+      fetchUserName();
+    }
+  }, [userId]);
+
   const formatRelativeTime = useCallback((dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -89,9 +111,16 @@ function PostCard({
                      hover:bg-primary/20 px-3 py-1.5 rounded-full inline-block
                      transition-all duration-200 hover:scale-105 focus:outline-none 
                      focus:ring-2 focus:ring-primary/50 self-start"
-          aria-label={`View ${userId}'s profile`}
+          aria-label={`View ${userName || userId}'s profile`}
         >
-          @{userId}
+          {loadingUser ? (
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+              <span className="opacity-50">@...</span>
+            </span>
+          ) : (
+            `@${userName || userId}`
+          )}
         </button>
         
         <div className="text-gray-500 text-xs space-y-0.5">
