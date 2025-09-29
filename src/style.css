@@ -35,6 +35,10 @@
   hover:underline transition duration-300;
 }
 
+.options__header {
+  @apply cursor-pointer hover:text-secondary
+}
+
 .main__login {
   @apply lg:flex lg:justify-center lg:items-center lg:h-screen lg:bg-black
 }
@@ -58,4 +62,20 @@
 
 .main__divMusclerGroupsBar {
   @apply w-full flex overflow-x-auto gap-4
+} 
+
+.h2__InfoExercises {
+  @apply text-xl font-bold lg:text-lg;
+}
+
+.h3__InfoExercises {
+  @apply text-sm font-semibold text-gray-400 uppercase 
+}
+
+.section__InfoExercises {
+  @apply flex flex-col gap-5
+}
+
+.section__div__InfoExercises {
+  @apply flex w-full gap-2 overflow-x-auto
 }
