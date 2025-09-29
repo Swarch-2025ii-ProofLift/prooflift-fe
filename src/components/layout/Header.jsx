@@ -11,6 +11,7 @@ function Header() {
   const toggleMenu = () => setMenuOpen(!menuOpen)
 
   const handleLogout = () => {
+    // console.log("Token eliminado de localStorage", localStorage.getItem("token"))
     localStorage.removeItem("token")
     window.location.href = "/"
   }
@@ -21,10 +22,8 @@ function Header() {
   }
 
   const menuItems = [
-    { label: "Inicio", action: () => handleNavigation("/") },
     { label: "Ejercicios", action: () => handleNavigation("/exercises") },
     { label: "Comunidad", action: () => handleNavigation("/posts") },
-    { label: "Cerrar sesión", action: handleLogout },
   ]
 
   return (
@@ -54,16 +53,18 @@ function Header() {
         <div className="p-4 font-extrabold text-lg">Menú</div>
         <ul className="flex flex-col p-2 gap-5 font-bold">
           {menuItems.map((item, index) => (
-            <li key={index} onClick={item.action} className="cursor-pointer hover:text-secondary">
+            <li key={index} onClick={item.action} className="options__header">
               {item.label}
             </li>
           ))}
+          <p className='options__header' 
+            onClick={handleLogout}>Cerrar Sesión</p>
         </ul>
       </aside>
 
       {/* Menú horizontal en desktop */}
       <ul className="hidden lg:flex lg:gap-20 text-white">
-        {menuItems.slice(0, -1).map((item, index) => (
+        {menuItems.map((item, index) => (
           <li
             key={index}
             onClick={item.action}
