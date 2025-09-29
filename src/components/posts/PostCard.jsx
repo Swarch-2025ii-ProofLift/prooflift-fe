@@ -1,5 +1,6 @@
 import { REACTIONS } from "../../constants/reactions.js";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { exercisesAPI } from "../../API/exercises.js";
 
 function PostCard({
   body,
@@ -15,11 +16,47 @@ function PostCard({
   onExerciseClick,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [exercises, setExercises] = useState({});
+  const [loadingExercises, setLoadingExercises] = useState(true);
   
   const shouldTruncate = body.length > 200;
   const displayBody = useMemo(() => 
     shouldTruncate && !isExpanded ? body.substring(0, 200) + "..." : body
   , [body, shouldTruncate, isExpanded]);
+
+  useEffect(() => {
+    const fetchExerciseNames = async () => {
+      if (!exerciseIds || exerciseIds.length === 0) {
+        setLoadingExercises(false);
+        return;
+      }
+
+      try {
+        setLoadingExercises(true);
+        const exerciseData = {};
+        
+        await Promise.all(
+          exerciseIds.map(async (id) => {
+            try {
+              const exercise = await exercisesAPI.getExercise(id);
+              exerciseData[id] = exercise;
+            } catch (error) {
+              console.error(`Error fetching exercise ${id}:`, error);
+              exerciseData[id] = { id, name: id };
+            }
+          })
+        );
+        
+        setExercises(exerciseData);
+      } catch (error) {
+        console.error('Error fetching exercises:', error);
+      } finally {
+        setLoadingExercises(false);
+      }
+    };
+
+    fetchExerciseNames();
+  }, [exerciseIds]);
 
   const formatRelativeTime = useCallback((dateString) => {
     const date = new Date(dateString);
@@ -89,20 +126,35 @@ function PostCard({
       {exerciseIds && exerciseIds.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <span className="text-xs text-gray-400 mr-1 self-center">Ejercicios:</span>
-          {exerciseIds.map((exercise, index) => (
-            <button
-              key={index}
-              onClick={() => onExerciseClick?.(exercise)}
-              className="text-primary text-xs bg-primary/10 hover:bg-primary/20 
-                         px-2.5 py-1 rounded-md transition-all duration-200 
-                         hover:scale-105 focus:outline-none focus:ring-1 
-                         focus:ring-primary/50 border border-transparent 
-                         hover:border-primary/30"
-              aria-label={`View exercise: ${exercise}`}
-            >
-              #{exercise}
-            </button>
-          ))}
+          {loadingExercises ? (
+            exerciseIds.map((_, index) => (
+              <div
+                key={index}
+                className="h-6 w-20 bg-primary/10 rounded-md animate-pulse"
+              ></div>
+            ))
+          ) : (
+            exerciseIds.map((exerciseId, index) => {
+              const exercise = exercises[exerciseId];
+              const displayName = exercise?.name || exerciseId;
+              
+              return (
+                <button
+                  key={index}
+                  onClick={() => onExerciseClick?.(exerciseId)}
+                  className="text-primary text-xs bg-primary/10 hover:bg-primary/20 
+                             px-2.5 py-1 rounded-md transition-all duration-200 
+                             hover:scale-105 focus:outline-none focus:ring-1 
+                             focus:ring-primary/50 border border-transparent 
+                             hover:border-primary/30"
+                  aria-label={`View exercise: ${displayName}`}
+                  title={displayName}
+                >
+                  #{displayName}
+                </button>
+              );
+            })
+          )}
         </div>
       )}
 

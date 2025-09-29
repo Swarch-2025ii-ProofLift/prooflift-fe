@@ -19,9 +19,9 @@ function Posts() {
   const [selectedFilter, setSelectedFilter] = useState('all');
 
   const filters = useMemo(() => [
-    { key: 'all', label: 'Todas', icon: '📝' },
-    { key: 'recent', label: 'Recientes', icon: '🕐' },
-    { key: 'popular', label: 'Populares', icon: '🔥' }  
+    { key: 'all', label: 'Todas'},
+    { key: 'recent', label: 'Recientes'},
+    { key: 'popular', label: 'Populares'}  
   ], []);
 
   useEffect(() => {
@@ -98,7 +98,6 @@ function Posts() {
                       : 'bg-tertiary/60 text-gray-400 hover:bg-tertiary hover:text-secondary'
                     }`}
                 >
-                  <span>{filter.icon}</span>
                   <span>{filter.label}</span>
                 </button>
               ))}

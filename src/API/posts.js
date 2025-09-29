@@ -70,7 +70,7 @@ export const GET_POST_DETAIL = gql`
 `;
 
 export const UPDATE_POST = gql`
-  mutation UpdatePost($postId: UUID!, $body: String, $exerciseIds: [UUID!]) {
+  mutation UpdatePost($postId: UUID!, $body: String, $exerciseIds: [String!]) {
     updatePost(postId: $postId, body: $body, exerciseIds: $exerciseIds) {
       id
       userId
@@ -93,7 +93,7 @@ export const DELETE_POST = gql`
 `;
 
 export const CREATE_POST = gql`
-  mutation CreatePost($body: String!, $exerciseIds: [UUID!]) {
+  mutation CreatePost($body: String!, $exerciseIds: [String!]) {
     createPost(body: $body, exerciseIds: $exerciseIds) {
       id
       userId

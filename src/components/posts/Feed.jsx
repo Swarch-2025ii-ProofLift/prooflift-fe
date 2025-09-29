@@ -1,9 +1,10 @@
 import { useState, useRef, useMemo, useCallback } from "react";
 import { useQuery, useMutation } from "@apollo/client/react";
+import { useNavigate } from "react-router-dom";
 import { GET_AGGREGATED_POSTS, SET_REACTION, REMOVE_REACTION } from "../../API/posts.js";
-import PostDetail from "./PostDetail.jsx";
+import PostDetail from "./detail/PostDetail.jsx";
 import PostItem from "./PostItem.jsx";
-import CreatePost from "./CreatePost.jsx";
+import CreatePost from "./create/CreatePost.jsx";
 
 function Feed({ 
   currentUserId, 
@@ -14,6 +15,7 @@ function Feed({
 }) {
   const [selectedPostId, setSelectedPostId] = useState(null);
   const feedRef = useRef(null);
+  const navigate = useNavigate();
 
   const { data, loading, error, refetch } = useQuery(GET_AGGREGATED_POSTS, {
     variables: { skip: 0, limit },
@@ -63,9 +65,9 @@ function Feed({
     console.log('Navigate to user:', userId);
   }, []);
 
-  const handleExerciseClick = useCallback((exercise) => {
-    console.log('Filter by exercise:', exercise);
-  }, []);
+  const handleExerciseClick = useCallback((exerciseId) => {
+    navigate(`/exercises/${exerciseId}`);
+  }, [navigate]);
 
   const handlePostCreated = useCallback(() => {
     refetch();
