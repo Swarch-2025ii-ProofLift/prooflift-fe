@@ -23,7 +23,7 @@ function Header() {
   const menuItems = [
     { label: "Inicio", action: () => handleNavigation("/") },
     { label: "Ejercicios", action: () => handleNavigation("/exercises") },
-    { label: "Publicar", action: () => handleNavigation("/publicar") },
+    { label: "Comunidad", action: () => handleNavigation("/posts") },
     { label: "Cerrar sesión", action: handleLogout },
   ]
 
