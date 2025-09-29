@@ -2,6 +2,7 @@ import { REACTIONS } from "../../constants/reactions.js";
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { exercisesAPI } from "../../API/exercises.js";
 import { getUserName } from "../../API/auth.js";
+import ReactionsDetail from "./ReactionsDetail.jsx";
 
 function PostCard({
   body,
@@ -15,12 +16,14 @@ function PostCard({
   onCommentClick,
   onUserClick,
   onExerciseClick,
+  postId,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [exercises, setExercises] = useState({});
   const [loadingExercises, setLoadingExercises] = useState(true);
   const [userName, setUserName] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [showReactionsModal, setShowReactionsModal] = useState(false);
   
   const shouldTruncate = body.length > 200;
   const displayBody = useMemo(() => 
@@ -96,157 +99,175 @@ function PostCard({
   }, []);
 
   return (
-    <article
-      className="w-full p-4 md:p-6 bg-tertiary/30 rounded-xl flex flex-col gap-4 
-                 shadow-lg hover:shadow-xl transition-all duration-300 ease-out
-                 hover:transform hover:scale-[1.01] border border-gray-800/50
-                 hover:border-gray-700/80 group"
-      role="article"
-      aria-label={`Post by ${userId}`}
-    >
-      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0">
-        <button
-          onClick={() => onUserClick?.(userId)}
-          className="text-secondary font-bold text-sm md:text-base bg-primary/10 
-                     hover:bg-primary/20 px-3 py-1.5 rounded-full inline-block
-                     transition-all duration-200 hover:scale-105 focus:outline-none 
-                     focus:ring-2 focus:ring-primary/50 self-start"
-          aria-label={`View ${userName || userId}'s profile`}
-        >
-          {loadingUser ? (
-            <span className="flex items-center gap-2">
-              <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
-              <span className="opacity-50">@...</span>
-            </span>
-          ) : (
-            `@${userName || userId}`
-          )}
-        </button>
-        
-        <div className="text-gray-500 text-xs space-y-0.5">
-          <time dateTime={createdAt} className="block">
-            {formatRelativeTime(createdAt)}
-          </time>
-          {updatedAt && createdAt !== updatedAt && (
-            <time dateTime={updatedAt} className="block opacity-75">
-              Editado {formatRelativeTime(updatedAt)}
+    <>
+      <article
+        className="w-full p-4 md:p-6 bg-tertiary/30 rounded-xl flex flex-col gap-4 
+                   shadow-lg hover:shadow-xl transition-all duration-300 ease-out
+                   hover:transform hover:scale-[1.01] border border-gray-800/50
+                   hover:border-gray-700/80 group"
+        role="article"
+        aria-label={`Post by ${userId}`}
+      >
+        <header className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0">
+          <button
+            onClick={() => onUserClick?.(userId)}
+            className="text-secondary font-bold text-sm md:text-base bg-primary/10 
+                       hover:bg-primary/20 px-3 py-1.5 rounded-full inline-block
+                       transition-all duration-200 hover:scale-105 focus:outline-none 
+                       focus:ring-2 focus:ring-primary/50 self-start"
+            aria-label={`View ${userName || userId}'s profile`}
+          >
+            {loadingUser ? (
+              <span className="flex items-center gap-2">
+                <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+                <span className="opacity-50">@...</span>
+              </span>
+            ) : (
+              `@${userName || userId}`
+            )}
+          </button>
+          
+          <div className="text-gray-500 text-xs space-y-0.5">
+            <time dateTime={createdAt} className="block">
+              {formatRelativeTime(createdAt)}
             </time>
-          )}
-        </div>
-      </header>
-
-      <div className="text-gray-200 text-base leading-relaxed">
-        <p className="break-words whitespace-pre-wrap">
-          {displayBody}
-        </p>
-        {shouldTruncate && (
-          <button
-            onClick={handleToggleExpand}
-            className="text-primary text-sm mt-2 hover:text-primary/80 
-                       transition-colors focus:outline-none focus:underline
-                       font-medium"
-            aria-expanded={isExpanded}
-          >
-            {isExpanded ? 'Ver menos' : 'Ver más'}
-          </button>
-        )}
-      </div>
-
-      {exerciseIds && exerciseIds.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <span className="text-xs text-gray-400 mr-1 self-center">Ejercicios:</span>
-          {loadingExercises ? (
-            exerciseIds.map((_, index) => (
-              <div
-                key={index}
-                className="h-6 w-20 bg-primary/10 rounded-md animate-pulse"
-              ></div>
-            ))
-          ) : (
-            exerciseIds.map((exerciseId, index) => {
-              const exercise = exercises[exerciseId];
-              const displayName = exercise?.name || exerciseId;
-              
-              return (
-                <button
-                  key={index}
-                  onClick={() => onExerciseClick?.(exerciseId)}
-                  className="text-primary text-xs bg-primary/10 hover:bg-primary/20 
-                             px-2.5 py-1 rounded-md transition-all duration-200 
-                             hover:scale-105 focus:outline-none focus:ring-1 
-                             focus:ring-primary/50 border border-transparent 
-                             hover:border-primary/30"
-                  aria-label={`View exercise: ${displayName}`}
-                  title={displayName}
-                >
-                  #{displayName}
-                </button>
-              );
-            })
-          )}
-        </div>
-      )}
-
-      <footer className="border-t border-gray-700/50 pt-3 mt-2">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            {reactionsByType && reactionsByType.length > 0 ? (
-              <>
-                <div className="flex -space-x-1">
-                  {reactionsByType.slice(0, 3).map(({ type }) => {
-                    const reaction = REACTIONS.find((r) => r.type === type);
-                    return (
-                      <span 
-                        key={type}
-                        className="inline-flex items-center justify-center w-5 h-5 
-                                   bg-primary/20 rounded-full border border-tertiary text-xs
-                                   hover:scale-110 transition-transform cursor-default"
-                        title={reaction?.label || type}
-                      >
-                        {reaction ? reaction.label : type.charAt(0)}
-                      </span>
-                    );
-                  })}
-                  {reactionsByType.length > 3 && (
-                    <span className="inline-flex items-center justify-center w-5 h-5 
-                                     bg-gray-700 rounded-full border border-tertiary text-xs
-                                     text-gray-300 cursor-default">
-                      +{reactionsByType.length - 3}
-                    </span>
-                  )}
-                </div>
-                
-                <span className="text-gray-400 text-sm font-medium">
-                  {totalReactions}
-                </span>
-              </>
-            ) : totalReactions > 0 ? (
-              <div className="flex items-center gap-1.5 text-gray-400 text-sm">
-                <span className="text-lg">👍</span>
-                <span className="font-medium">{totalReactions}</span>
-              </div>
-            ) : null}
+            {updatedAt && createdAt !== updatedAt && (
+              <time dateTime={updatedAt} className="block opacity-75">
+                Editado {formatRelativeTime(updatedAt)}
+              </time>
+            )}
           </div>
+        </header>
 
-          <button
-            onClick={() => onCommentClick?.()}
-            className="flex items-center gap-1.5 text-gray-400 text-sm 
-                       hover:text-primary transition-all duration-200 group/button 
-                       p-1 rounded-md hover:bg-primary/5 focus:outline-none 
-                       focus:ring-1 focus:ring-primary/50"
-            aria-label={`${totalComments} comments`}
-          >
-            <span className="text-lg group-hover/button:scale-110 transition-transform">
-              💬
-            </span>
-            <span className="font-medium">{totalComments}</span>
-            <span className="hidden sm:inline text-xs">
-              {totalComments === 1 ? 'comentario' : 'comentarios'}
-            </span>
-          </button>
+        <div className="text-gray-200 text-base leading-relaxed">
+          <p className="break-words whitespace-pre-wrap">
+            {displayBody}
+          </p>
+          {shouldTruncate && (
+            <button
+              onClick={handleToggleExpand}
+              className="text-primary text-sm mt-2 hover:text-primary/80 
+                         transition-colors focus:outline-none focus:underline
+                         font-medium"
+              aria-expanded={isExpanded}
+            >
+              {isExpanded ? 'Ver menos' : 'Ver más'}
+            </button>
+          )}
         </div>
-      </footer>
-    </article>
+
+        {exerciseIds && exerciseIds.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            <span className="text-xs text-gray-400 mr-1 self-center">Ejercicios:</span>
+            {loadingExercises ? (
+              exerciseIds.map((_, index) => (
+                <div
+                  key={index}
+                  className="h-6 w-20 bg-primary/10 rounded-md animate-pulse"
+                ></div>
+              ))
+            ) : (
+              exerciseIds.map((exerciseId, index) => {
+                const exercise = exercises[exerciseId];
+                const displayName = exercise?.name || exerciseId;
+                
+                return (
+                  <button
+                    key={index}
+                    onClick={() => onExerciseClick?.(exerciseId)}
+                    className="text-primary text-xs bg-primary/10 hover:bg-primary/20 
+                               px-2.5 py-1 rounded-md transition-all duration-200 
+                               hover:scale-105 focus:outline-none focus:ring-1 
+                               focus:ring-primary/50 border border-transparent 
+                               hover:border-primary/30"
+                    aria-label={`View exercise: ${displayName}`}
+                    title={displayName}
+                  >
+                    #{displayName}
+                  </button>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        <footer className="border-t border-gray-700/50 pt-3 mt-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              {reactionsByType && reactionsByType.length > 0 ? (
+                <button
+                  onClick={() => setShowReactionsModal(true)}
+                  className="flex items-center gap-2 hover:bg-gray-700/30 p-1.5 rounded-lg
+                           transition-all duration-200 group/reactions"
+                >
+                  <div className="flex -space-x-1">
+                    {reactionsByType.slice(0, 3).map(({ type }) => {
+                      const reaction = REACTIONS.find((r) => r.type === type);
+                      return (
+                        <span 
+                          key={type}
+                          className="inline-flex items-center justify-center w-5 h-5 
+                                     bg-primary/20 rounded-full border border-tertiary text-xs
+                                     group-hover/reactions:scale-110 transition-transform cursor-pointer"
+                          title={reaction?.label || type}
+                        >
+                          {reaction ? reaction.label : type.charAt(0)}
+                        </span>
+                      );
+                    })}
+                    {reactionsByType.length > 3 && (
+                      <span className="inline-flex items-center justify-center w-5 h-5 
+                                       bg-gray-700 rounded-full border border-tertiary text-xs
+                                       text-gray-300 cursor-pointer">
+                        +{reactionsByType.length - 3}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <span className="text-gray-400 text-sm font-medium group-hover/reactions:text-primary
+                                 transition-colors">
+                    {totalReactions}
+                  </span>
+                </button>
+              ) : totalReactions > 0 ? (
+                <div className="flex items-center gap-1.5 text-gray-400 text-sm">
+                  <span className="text-lg">👍</span>
+                  <span className="font-medium">{totalReactions}</span>
+                </div>
+              ) : null}
+            </div>
+
+            <button
+              onClick={() => onCommentClick?.()}
+              className="flex items-center gap-1.5 text-gray-400 text-sm 
+                         hover:text-primary transition-all duration-200 group/button 
+                         p-1 rounded-md hover:bg-primary/5 focus:outline-none 
+                         focus:ring-1 focus:ring-primary/50"
+              aria-label={`${totalComments} comments`}
+            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+              <span className="font-medium">{totalComments}</span>
+              <span className="hidden sm:inline text-xs">
+                {totalComments === 1 ? 'comentario' : 'comentarios'}
+              </span>
+            </button>
+          </div>
+        </footer>
+      </article>
+
+      {/* Reactions Detail Modal */}
+      {showReactionsModal && postId && (
+        <ReactionsDetail
+          postId={postId}
+          reactionsByType={reactionsByType}
+          totalReactions={totalReactions}
+          onClose={() => setShowReactionsModal(false)}
+        />
+      )}
+    </>
   );
 }
 

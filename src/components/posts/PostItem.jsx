@@ -98,6 +98,7 @@ function PostItem({
             onUserClick={onUserClick}
             onExerciseClick={onExerciseClick}
             onCommentClick={onOpenComments}
+            postId={post.id}
           />
         </div>
 

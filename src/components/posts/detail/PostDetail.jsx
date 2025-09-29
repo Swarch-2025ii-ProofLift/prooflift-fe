@@ -79,6 +79,7 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
   , [data?.getAggregatedPostById?.reactionsByType]);
   const reactionsByType = data?.getAggregatedPostById?.reactionsByType || [];
   const currentUserReaction = data?.getAggregatedPostById?.currentUserReaction || null;
+  const detailedReactions = data?.getReactionsForPost || [];
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -89,6 +90,10 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
 
     const handleClickOutside = (event) => {
       if (showDeleteConfirm) return;
+      
+      const isReactionsModal = event.target.closest('[data-reactions-modal]');
+      if (isReactionsModal) return;
+      
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
       }
@@ -171,7 +176,7 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
                      ${isClosing ? 'animate-out fade-out zoom-out-95 duration-200' : 'animate-in fade-in zoom-in-95 duration-200'}`}>
       <div 
         ref={modalRef}
-        className="bg-tertiary/70 rounded-xl shadow-2xl border border-gray-700/50 
+        className="bg-tertiary/80 rounded-xl shadow-2xl border border-gray-700/50 
                    max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
       >
         <PostDetailHeader onClose={handleClose} />
@@ -212,6 +217,8 @@ function PostDetail({ postId, onClose, onDelete, currentUserId }) {
                 totalReactions={totalReactions}
                 totalComments={totalComments}
                 reactionsByType={reactionsByType}
+                postId={postId}
+                detailedReactions={detailedReactions}
               />
 
               <PostInteractionBar
