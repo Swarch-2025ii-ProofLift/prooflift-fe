@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import logo from "/icono-white.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
+import client from '../../API/apollo-client.js'
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -13,6 +14,7 @@ function Header() {
   const handleLogout = () => {
     // console.log("Token eliminado de localStorage", localStorage.getItem("token"))
     localStorage.removeItem("token")
+    client.resetStore();
     window.location.href = "/"
   }
 
@@ -23,7 +25,7 @@ function Header() {
 
   const menuItems = [
     { label: "Ejercicios", action: () => handleNavigation("/exercises") },
-    { label: "Publicar", action: () => handleNavigation("/publicar") },
+    { label: "Comunidad", action: () => handleNavigation("/posts") },
   ]
 
   return (

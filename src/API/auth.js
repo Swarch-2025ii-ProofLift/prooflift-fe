@@ -36,3 +36,21 @@ export async function signup(nombre, email, password) {
 
   return response.json()
 }
+
+export async function getUserName(uuid) {
+  const token = localStorage.getItem("token");
+  
+  const response = await fetch(`${API_URL}/auth/user/${uuid}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el nombre del usuario');
+  }
+
+  return response.text();
+}
