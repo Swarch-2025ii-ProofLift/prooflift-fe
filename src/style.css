@@ -6,7 +6,34 @@
     --color-tertiary: #303030;
     --color-background: #191919;
     --color-background-secondary: #0f2319;
+}
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.loading-skeleton {
+  @apply bg-gray-700 animate-pulse rounded;
 }
 
 .dm-sans{
@@ -35,6 +62,10 @@
   hover:underline transition duration-300;
 }
 
+.options__header {
+  @apply cursor-pointer hover:text-secondary
+}
+
 .main__login {
   @apply lg:flex lg:justify-center lg:items-center lg:h-screen lg:bg-black
 }
@@ -58,4 +89,20 @@
 
 .main__divMusclerGroupsBar {
   @apply w-full flex overflow-x-auto gap-4
+} 
+
+.h2__InfoExercises {
+  @apply text-xl font-bold lg:text-lg;
+}
+
+.h3__InfoExercises {
+  @apply text-sm font-semibold text-gray-400 uppercase 
+}
+
+.section__InfoExercises {
+  @apply flex flex-col gap-5
+}
+
+.section__div__InfoExercises {
+  @apply flex w-full gap-2 overflow-x-auto
 }

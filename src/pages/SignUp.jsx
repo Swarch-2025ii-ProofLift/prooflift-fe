@@ -66,7 +66,7 @@ function SignUp () {
               <InputCamp
                 icon={faUnlock}
                 type='password'
-                placeholder='confirma tu contraseña'
+                placeholder='Confirma tu contraseña'
                 data='confirmPassword'
                 validate={{
                   required: "Debes confirmar tu contraseña",
