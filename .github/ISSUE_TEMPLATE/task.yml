@@ -1,0 +1,38 @@
+name: Tarea
+description: Crear una tarea relacionada con una historia de usuario de ProofLift
+title: "[TASK-HUX.X-Y] Nombre corto de la tarea"
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción
+      description: Explica en detalle lo que se debe implementar en esta tarea.
+      placeholder: |
+        Implementar el formulario de creación de publicación con los siguientes requisitos:
+        - Selección de ejercicios desde el catálogo
+        - Campo de descripción corta.
+        - Envío de los datos al backend vía GraphQL
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Criterios de Aceptación
+      description: Condiciones que deben cumplirse para considerar esta tarea como completada.
+      placeholder: |
+        - El formulario valida correctamente los campos obligatorios
+        - La publicación se guarda exitosamente en la base de datos
+        - La publicación aparece inmediatamente en el feed
+    validations:
+      required: true
+
+  - type: input
+    id: related-story
+    attributes:
+      label: Historia de Usuario Relacionada
+      description: ID de la historia de usuario de ProofLift a la que pertenece esta tarea (sin #).
+      placeholder: "HU-2.1"
+    validations:
+      required: true

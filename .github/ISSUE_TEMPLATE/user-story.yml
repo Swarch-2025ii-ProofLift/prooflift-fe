@@ -1,0 +1,39 @@
+name: Historia de Usuario
+description: Crea una historia de usuario de ProofLift con detalles técnicos y criterios de aceptación.
+title: "[HU X.X] Nombre corto de la historia"
+
+body:
+  - type: textarea
+    id: user_story
+    attributes:
+      label: Historia de Usuario
+      description: Escribe la historia siguiendo el formato "Como [rol], quiero [acción], para [beneficio]".
+      placeholder: |
+        Como usuario registrado, quiero crear una publicación seleccionando ejercicios del catálogo, para compartir mi entrenamiento con la comunidad.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Criterios de Aceptación
+      description: Lista de comportamientos esperados y condiciones para aprobar esta historia.
+      placeholder: |
+        - El usuario puede seleccionar uno o más ejercicios del catálogo.
+        - El usuario puede añadir una descripción corta (máx. X caracteres).
+        - Después de guardar, la publicación aparece en el feed de la comunidad.
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical_notes
+    attributes:
+      label: Notas Técnicas / Detalles de Implementación
+      description: Consideraciones técnicas, dependencias o ideas importantes para el equipo de desarrollo.
+      placeholder: |
+        - El backend debe exponer una mutación GraphQL `createPost` con los campos: ejercicios, descripción, multimedia.
+        - Las publicaciones deben almacenarse en PostgreSQL con referencia al usuario y a los ejercicios.
+        - Se debe usar el token de autenticación (JWT) para asociar la publicación con el usuario logueado.
+        - El frontend debe renderizar dinámicamente las publicaciones en el feed de la comunidad.
+    validations:
+      required: false
