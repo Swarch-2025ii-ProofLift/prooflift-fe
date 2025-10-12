@@ -26,7 +26,7 @@ function AccountInfo( { title, info } ) {
                     <h2 className='font-semibold'>{title}</h2>  
                     <h3 className='text-gray-400'>{info}</h3>
                 </div>
-                <button className="bg-[#2b2b2b] flex items-center cursor-pointer p-2 rounded-md text-primary" 
+                <button className="bg-[#2b2b2b] flex items-center cursor-pointer p-2 rounded-md text-primary  hover:bg-background-secondary transition-colors" 
                     onClick={HandleEditClick}>
                     <FontAwesomeIcon icon={faPencil} className="text-primary mr-2" />
                     <p>Editar</p>
