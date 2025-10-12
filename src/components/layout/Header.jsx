@@ -26,6 +26,7 @@ function Header() {
   const menuItems = [
     { label: "Ejercicios", action: () => handleNavigation("/exercises") },
     { label: "Comunidad", action: () => handleNavigation("/posts") },
+    { label: "Perfil", action: () => handleNavigation("/profile") },
   ]
 
   return (

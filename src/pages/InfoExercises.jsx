@@ -127,7 +127,7 @@ function InfoExercises() {
   return (
     <div className="bg-background-secondary text-secondary">
       <Header />
-      <main className="w-full flex flex-col gap-5 px-4 py-10 lg:px-60">
+      <main className="main__infoExercises">
         <button 
           onClick={() => navigate('/exercises')}
           className="cursor-pointer flex items-center 
