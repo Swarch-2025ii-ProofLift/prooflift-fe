@@ -10,11 +10,11 @@ function Profile() {
         <Header />
         <main className='w-full flex flex-col gap-5 px-4 py-10 lg:px-80'>
             <h1 className='h1__title text-left'>Perfil de Usuario y Notificaciones</h1>
-            <h3 className='text-sm text-gray-400'>Gestiona tu información personal y notificaciones. </h3>
+            <h3 className='text-sm text-gray-400'>Gestiona tu información personal y notificaciones.</h3>
             <BoxInfo title="Información de Cuenta"> 
-              <AccountInfo title="Nombre de Usuario" info="Usuario123" />
-              <AccountInfo title="Correo Electrónico" info="usuario123@example.com" />
-              <AccountInfo title="Contraseña" info="xxxxxx" />
+              <AccountInfo title="Nombre" />
+              <AccountInfo title="Email"/>
+              {/* <AccountInfo title="password" /> */}
             </BoxInfo>
             <BoxInfo title="Notificaciones">
               <Notifications Notification="No tienes nuevas notificaciones." hour="Hace 5 minutos" />

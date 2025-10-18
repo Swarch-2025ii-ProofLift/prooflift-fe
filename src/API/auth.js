@@ -18,7 +18,7 @@ export async function login(email, password) {
   const data = await response.json()
 
   localStorage.setItem("token", data.token);
-  // console.log("Token guardado en localStorage:", data.token);
+  console.log("Token guardado en localStorage:", data.token);
 
   return data;
 }
