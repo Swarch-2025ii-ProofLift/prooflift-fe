@@ -42,7 +42,7 @@ export async function updateProfile(token, payload) {
   localStorage.setItem("uuid", userId);
 
   const res = await fetch(`${API_URL}/profile/update/${userId}`, {  
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
