@@ -55,3 +55,23 @@ export async function updateProfile(token, payload) {
   }
   return res.json();
 }
+
+export async function deleteProfile(token) {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error("User not authenticated");
+
+  const res = await fetch(`${API_URL}/profile/delete/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`deleteProfile failed: ${res.status} ${text}`);
+  }
+
+  // return res.json(); // si el backend retorna algo
+}
